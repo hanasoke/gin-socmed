@@ -28,7 +28,19 @@ func Response(params dto.ResponseParams) any {
 
 	if params.Data != nil {
 		response = &ResponseWithData{
-			Code: params.StatusCode,
+			Code:     params.StatusCode,
+			Status:   status,
+			Message:  params.Message,
+			Paginate: params.Paginate,
+			Data:     params.Data,
+		}
+	} else {
+		response = &ResponseWithoutData{
+			Code:    params.StatusCode,
+			Status:  status,
+			Message: params.Message,
 		}
 	}
+
+	return response
 }
