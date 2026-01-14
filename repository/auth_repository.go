@@ -8,6 +8,7 @@ import (
 
 type AuthRepository interface {
 	EmailExist(email string) bool
+	Register(req *entity.User) error
 }
 
 type authRepository struct {
@@ -18,6 +19,12 @@ func NewAuthRepository(db *gorm.DB) *authRepository {
 	return &authRepository{
 		db: db,
 	}
+}
+
+func (r *authRepository) Register(user *entity.User) error {
+	err := r.db.Create(&user).Error
+
+	return err
 }
 
 func (r *authRepository) EmailExist(email string) bool {

@@ -2,7 +2,9 @@ package service
 
 import (
 	"gin-socmed/dto"
+	"gin-socmed/entity"
 	"gin-socmed/errorhandler"
+	"gin-socmed/helper"
 	"gin-socmed/repository"
 )
 
@@ -29,4 +31,21 @@ func (s *authService) Register(req *dto.RegisterRequest) error {
 		return &errorhandler.BadRequestError{Message: "password not match"}
 	}
 
+	passwordHash, err := helper.HashPassword(req.Password)
+	if err != nil {
+		return &errorhandler.InternalServerError{Message: err.Error()}
+	}
+
+	user := entity.User{
+		Name:     req.Name,
+		Email:    req.Email,
+		Password: passwordHash,
+		Gender:   req.Gender,
+	}
+
+	if err := s.repository.Register(&user); err != nil {
+		return &errorhandler.InternalServerError{Message: err.Error()}
+	}
+
+	return nil
 }
