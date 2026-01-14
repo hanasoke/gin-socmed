@@ -2,6 +2,7 @@ package service
 
 import (
 	"gin-socmed/dto"
+	"gin-socmed/errorhandler"
 	"gin-socmed/repository"
 )
 
@@ -20,5 +21,12 @@ func NewAuthService(r repository.AuthRepository) *authService {
 }
 
 func (s *authService) Register(req *dto.RegisterRequest) error {
-	if email 
+	if emailExist := s.repository.EmailExist(req.Email); emailExist {
+		return &errorhandler.BadRequestError{Message: "email already registered"}
+	}
+
+	if req.Password != req.PasswordConfirmation {
+		return &errorhandler.BadRequestError{Message: "password not match"}
+	}
+
 }
