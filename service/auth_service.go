@@ -10,6 +10,7 @@ import (
 
 type AuthService interface {
 	Register(req *dto.RegisterRequest) error
+	Login(req *dto.LoginRequest) (*dto.LoginResponse, error)
 }
 
 type authService struct {
@@ -48,4 +49,14 @@ func (s *authService) Register(req *dto.RegisterRequest) error {
 	}
 
 	return nil
+}
+
+func (s *authService) Login(req *dto.LoginRequest) (*dto.LoginResponse, error) {
+	var data dto.LoginResponse
+
+	user, err := s.repository.GetUserByEmail(req.Email)
+	if err != nil {
+		return nil, &errorhandler.NotFoundError{Message: "wrong email or password"}
+	}
+
 }

@@ -40,3 +40,13 @@ func (h *authHandler) Register(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, res)
 }
+
+func (h *authHandler) Login(c *gin.Context) {
+	var login dto.LoginRequest
+
+	err := c.ShouldBindJSON(&login)
+	if err != nil {
+		errorhandler.HandleError(c, &errorhandler.BadRequestError{Message: err.Error()})
+		return
+	}
+}
