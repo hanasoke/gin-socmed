@@ -1,5 +1,7 @@
 package dto
 
+import "mime/multipart"
+
 type PostResponse struct {
 	ID         int    `json:"id"`
 	UserID     int    `json:"-"`
@@ -11,4 +13,13 @@ type PostResponse struct {
 }
 
 type PostRequest struct {
+	UserID  int                   `form:"user_id"`
+	Tweet   string                `form:"tweet"`
+	Picture *multipart.FileHeader `form:"picture"`
+}
+
+type User struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
