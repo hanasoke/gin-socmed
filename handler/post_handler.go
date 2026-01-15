@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type postHandler struct {
@@ -46,6 +47,7 @@ func (h *postHandler) Create(c *gin.Context) {
 	}
 
 	userID := 1
+	post.UserID = userID
 
 	if err := h.service.Create(&post); err != nil {
 		errorhandler.HandleError(c, err)
@@ -57,5 +59,5 @@ func (h *postHandler) Create(c *gin.Context) {
 		Message:    "Success post your tweet",
 	})
 
-	c.JSON(http.StatusCreated)
+	c.JSON(http.StatusCreated, res)
 }
