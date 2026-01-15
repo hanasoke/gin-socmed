@@ -32,7 +32,7 @@ func (h *postHandler) Create(c *gin.Context) {
 	}
 
 	if post.Picture != nil {
-		if err := os.Mkdir("/public/picture", 0755); err != nil {
+		if err := os.MkdirAll("/public/picture", 0755); err != nil {
 			errorhandler.HandleError(c, &errorhandler.InternalServerError{Message: err.Error()})
 			return
 		}

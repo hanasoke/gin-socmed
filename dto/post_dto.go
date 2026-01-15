@@ -9,7 +9,7 @@ type PostResponse struct {
 	Tweet      string `json:"tweet"`
 	PictureUrl string `json:"picture_url"`
 	CreatedAt  string `json:"created_at"`
-	UpdateAt   string `json:"updated_at"`
+	UpdatedAt  string `json:"updated_at"`
 }
 
 type PostRequest struct {
