@@ -8,5 +8,5 @@ type Post struct {
 	Tweet      string
 	PictureUrl *string
 	CreatedAt  time.Time
-	Updated    time.Time
+	UpdatedAt  time.Time
 }
