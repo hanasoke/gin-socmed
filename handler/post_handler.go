@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -31,19 +32,36 @@ func (h *postHandler) Create(c *gin.Context) {
 		return
 	}
 
+	// Validasi tweet tidak boleh kosong
+	if strings.TrimSpace(post.Tweet) == "" {
+		errorhandler.HandleError(c, &errorhandler.BadRequestError{Message: "Tweet cannot be empty"})
+		return
+	}
+
+	// Handle file upload jika ada
 	if post.Picture != nil {
-		if err := os.MkdirAll("/public/picture", 0755); err != nil {
+		// Buat directory jika belum ada (path relative)
+		dirPath := "./public/picture"
+		if err := os.MkdirAll(dirPath, 0755); err != nil {
 			errorhandler.HandleError(c, &errorhandler.InternalServerError{Message: err.Error()})
 			return
 		}
 
-		// Rename picture
+		// Generate nama file unik
 		ext := filepath.Ext(post.Picture.Filename)
 		newFileName := uuid.New().String() + ext
 
-		// Save image to directory
-		dst := filepath.Join("public/picture", filepath.Base(newFileName))
-		c.SaveUploadedFile(post.Picture, dst)
+		// Path lengkap untuk penyimpanan
+		dst := filepath.Join(dirPath, newFileName)
+
+		// Simpan file
+		if err := c.SaveUploadedFile(post.Picture, dst); err != nil {
+			errorhandler.HandleError(c, &errorhandler.InternalServerError{Message: err.Error()})
+			return
+		}
+
+		// Simpan nama file ke struct untuk diproses service
+		post.Picture.Filename = newFileName
 	}
 
 	userID := 1
@@ -54,6 +72,7 @@ func (h *postHandler) Create(c *gin.Context) {
 		return
 	}
 
+	// panggila service
 	res := helper.Response(dto.ResponseParams{
 		StatusCode: http.StatusCreated,
 		Message:    "Success post your tweet",
