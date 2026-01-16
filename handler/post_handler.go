@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"gin-socmed/dto"
 	"gin-socmed/errorhandler"
 	"gin-socmed/helper"
@@ -62,6 +63,7 @@ func (h *postHandler) Create(c *gin.Context) {
 
 		// Simpan nama file ke struct untuk diproses service
 		post.Picture.Filename = newFileName
+		post.Picture.Filename = fmt.Sprintf("%s/public/picture/%s", c.Request.Host, newFileName)
 	}
 
 	userID := 1
