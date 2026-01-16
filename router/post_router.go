@@ -3,6 +3,7 @@ package router
 import (
 	"gin-socmed/config"
 	"gin-socmed/handler"
+	"gin-socmed/middleware"
 	"gin-socmed/repository"
 	"gin-socmed/service"
 
@@ -15,6 +16,8 @@ func PostRouter(api *gin.RouterGroup) {
 	postHandler := handler.NewPostHandler(postService)
 
 	r := api.Group("/tweets")
+
+	r.Use(middleware.JWTMiddleware())
 
 	r.POST("/", postHandler.Create)
 }

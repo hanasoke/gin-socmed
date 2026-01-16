@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"gin-socmed/errorhandler"
+	"gin-socmed/helper"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,5 +16,14 @@ func JWTMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		userId, err := helper.ValidateToken(tokenString)
+		if err != nil {
+			errorhandler.HandleError(c, &errorhandler.UnathorizedError{Message: err.Error()})
+			c.Abort()
+			return
+		}
+
+		c.Set("userID", *userId)
+		c.Next()
 	}
 }
